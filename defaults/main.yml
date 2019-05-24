@@ -1,0 +1,10 @@
+---
+# defaults file for consul
+consul_version: "1.5.1"
+consul_directory_data: "/var/lib/consul"
+consul_directory_config: "/etc/consul.d"
+consul_cluster_key: "pzDVYxESgPSkPhBFudHU5w=="
+consul_directory_bin: "/usr/local/bin"
+nodes_consul_1: "consul01"
+nodes_consul_2: "consul02"
+nodes_consul_3: "consul03"

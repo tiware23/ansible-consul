@@ -1,0 +1,64 @@
+---
+# tasks file for consul
+- name: Install O.S Tools
+  yum:
+    name:
+      - wget
+      - unzip
+    state: present
+
+- name: Unzip consul_{{ consul_version }}_linux_amd64.zip zip file
+  unarchive:
+    src: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
+    dest: "{{ consul_directory_bin }}"
+    remote_src: yes
+
+- name: Create Group Consul
+  group:
+    name: consul
+    state: present
+
+- name: Create User Consul
+  user:
+    name: consul
+    comment: Service Application
+    uid: 1040
+    shell: /sbin/nologin
+    group: consul
+
+- name: Created Consul directory
+  file:
+    path: "{{ item }}"
+    owner: consul
+    group: consul
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ consul_directory_data }}"
+    - "{{ consul_directory_config }}"
+
+- name: Configure Systemd service
+  template:
+    src: consul.service.j2
+    dest: /usr/lib/systemd/system/consul.service
+    mode: 0644
+
+- name: Configure Consul config
+  template:
+    src: consul.config.j2
+    dest: "{{ consul_directory_config }}/config.json"
+    mode: 0644
+
+- name: Enable and start Consul service
+  systemd:
+    name: consul
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: Check members cluster
+  shell: "{{ consul_directory_bin }}/consul members"
+  register: out
+
+- debug: var=out.stdout_lines
+

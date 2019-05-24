@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANT_API_VERSION = 2
+
+Vagrant.configure(VAGRANT_API_VERSION) do |config|
+  config.ssh.insert_key = false
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
+
+  config.vm.define 'consul01' do |el1|
+    el1.vm.hostname = 'consul01'
+    el1.vm.box = "centos/7"
+    el1.vm.network "private_network", ip: "192.168.56.11"
+    el1.hostmanager.aliases = %w(consul01.local consul01)
+  end
+  config.vm.define 'consul02' do |el2|
+    el2.vm.hostname = 'consul02'
+    el2.vm.box = "centos/7"
+    el2.vm.network "private_network",  ip: "192.168.56.12"
+    el2.hostmanager.aliases = %w(consul02.local consul02)
+  end
+  config.vm.define 'consul03' do |el3|
+    el3.vm.hostname = 'consul03'
+    el3.vm.box = "centos/7"
+    el3.vm.network "private_network", ip: "192.168.56.13"
+    el3.hostmanager.aliases = %w(consul03.local consul03)
+  end
+end
