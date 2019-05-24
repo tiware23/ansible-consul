@@ -5,10 +5,11 @@ Just tasks to create a Consul cluster.
 
 Example Playbook
 ----------------
-
+  ```
   - hosts: servers
     roles:
        - consul
+  ```
 
 License
 -------
